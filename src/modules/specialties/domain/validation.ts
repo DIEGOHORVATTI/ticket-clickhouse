@@ -1,25 +1,35 @@
 import { t as Type } from 'elysia'
 
-const schema = {
-  name: Type.String({
-    minLength: 3,
-    maxLength: 100,
-    default: 'Pediatria',
-    description: 'Nome da especialidade'
-  }),
-  description: Type.Optional(
-    Type.String({
-      maxLength: 500,
-      default: 'Especialidade médica que cuida de crianças',
-      description: 'Descrição da especialidade'
-    })
-  ),
-  active: Type.Optional(
-    Type.Boolean({
-      default: true,
-      description: 'Especialidade ativa'
-    })
-  )
+const callStatus = {
+  missed: 'missed',
+  received: 'received',
+  rejected: 'rejected'
 }
 
-export const SpecialtyValidation = { schema, composition: Type.Object(schema) }
+export const schema = Type.Object({
+  callId: Type.String({
+    required: true,
+    index: true
+  }),
+  timestamp: Type.Date({
+    required: true,
+    default: Date.now
+  }),
+  status: Type.String({
+    required: true,
+    enum: Type.Enum(callStatus)
+  }),
+  caller: Type.Object({
+    id: Type.String(),
+    name: Type.String(),
+    phoneNumber: Type.String()
+  }),
+  agent: Type.Object({
+    id: Type.String(),
+    name: Type.String()
+  }),
+  duration: Type.Number(),
+  notes: Type.String()
+})
+
+export const CallEventValidation = { schema, composition: Type.Object(schema) }

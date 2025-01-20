@@ -4,9 +4,9 @@ import { collectionsData } from '@/constants/config'
 
 import { schemaFactory } from '@/shared/schema-factory'
 
-import { SpecialtyValidation } from './validation'
+import { CallEventValidation } from './validation'
 
-export type ISpecialty = typeof SpecialtyValidation.composition.static
+export type ISpecialty = typeof CallEventValidation.composition.static
 
 const schema = new Schema<ISpecialty, Model<ISpecialty>>(
   {
@@ -20,8 +20,8 @@ const schema = new Schema<ISpecialty, Model<ISpecialty>>(
   }
 )
 
-export const Specialty = schemaFactory<ISpecialty, {}, typeof SpecialtyValidation>({
+export const CallEvent = schemaFactory<ISpecialty, {}, typeof CallEventValidation>({
   schema,
   name: collectionsData.Specialty.name,
-  validation: SpecialtyValidation
+  validation: CallEventValidation
 })

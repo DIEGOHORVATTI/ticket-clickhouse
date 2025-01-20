@@ -1,9 +1,9 @@
 import { error } from 'elysia'
 
-import { ISpecialty, Specialty } from '@/modules/specialties/domain'
+import { ISpecialty, CallEvent } from '@/modules/specialties/domain'
 
 export const updateSpecialtyService = async (id: string, data: ISpecialty) => {
-  const specialty = await Specialty.model.findById(id)
+  const specialty = await CallEvent.model.findById(id)
   if (!specialty) {
     throw error('Not Found', { error: 'Especialidade não encontrada' })
   }
@@ -21,7 +21,7 @@ export const updateSpecialtyService = async (id: string, data: ISpecialty) => {
   return { specialty }
 
   async function validateUniqueSpecialtyName() {
-    const existingSpecialty = await Specialty.model.findOne({ name: data.name })
+    const existingSpecialty = await CallEvent.model.findOne({ name: data.name })
 
     if (existingSpecialty) {
       throw error('Conflict', { error: 'Já existe uma especialidade com este nome' })

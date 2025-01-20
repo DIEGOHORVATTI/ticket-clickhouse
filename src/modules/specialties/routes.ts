@@ -5,7 +5,7 @@ import { getAllSpecialtiesService } from '@/modules/specialties/use-cases/get-al
 import { updateSpecialtyService } from '@/modules/specialties/use-cases/update'
 import { removeSpecialtyService } from '@/modules/specialties/use-cases/remove'
 import { getOneSpecialtyService } from './use-cases/get-one'
-import { Specialty } from './domain'
+import { CallEvent } from './domain'
 
 const router = new Elysia({ tags: ['Especialidade'], prefix: '/specialties' })
   .post(
@@ -16,7 +16,7 @@ const router = new Elysia({ tags: ['Especialidade'], prefix: '/specialties' })
       return { message: 'Especialidade cadastrada com sucesso', specialty }
     },
     {
-      body: Specialty.validation.composition,
+      body: CallEvent.validation.composition,
       detail: { description: 'Cadastra uma nova especialidade' }
     }
   )
@@ -39,7 +39,7 @@ const router = new Elysia({ tags: ['Especialidade'], prefix: '/specialties' })
       return { message: 'Especialidade atualizada com sucesso', specialty }
     },
     {
-      body: Specialty.validation.composition,
+      body: CallEvent.validation.composition,
       detail: { description: 'Atualiza uma especialidade' }
     }
   )
@@ -63,7 +63,7 @@ const router = new Elysia({ tags: ['Especialidade'], prefix: '/specialties' })
       return { message: 'Especialidades encontradas com sucesso', ...result }
     },
     {
-      body: Specialty.filters,
+      body: CallEvent.filters,
       detail: { description: 'Lista todas as especialidades com filtros' }
     }
   )
