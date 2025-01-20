@@ -1,0 +1,23 @@
+{
+  "name": "call-monitoring-system",
+  "version": "1.0.0",
+  "description": "Call monitoring system with ElysiaJS, MongoDB and ClickHouse",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "elysia": "^0.7.30",
+    "mongoose": "^8.0.3",
+    "clickhouse": "^2.6.0",
+    "date-fns": "^3.0.6",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "tsx": "^4.7.0",
+    "@types/node": "^20.10.5"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "name": "backend",
+  "type": "module",
+  "version": "0.1.40",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.717.0",
+    "@elysiajs/cors": "^1.2.0",
+    "@elysiajs/jwt": "^1.2.0",
+    "@elysiajs/swagger": "^1.2.0",
+    "axios": "^1.7.9",
+    "elysia": "^1.2.9",
+    "elysia-rate-limit": "^4.1.0",
+    "mongoose": "^8.9.2",
+    "mongoose-paginate-v2": "^1.8.5"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.1.14",
+    "@types/nodemailer": "^6.4.17",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5.7.2"
+  },
+  "scripts": {
+    "dev": "bun run --watch src/index.ts",
+    "start": "bun run src/index.ts",
+    "lint:fix": "eslint --fix --ext .ts,.tsx .",
+    "prettier": "prettier --config .prettierrc 'src/**/*.ts' --write"
+  }
+}

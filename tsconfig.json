@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "CommonJS",
+    "outDir": "dist",
+    "jsx": "react-jsx",
+    "baseUrl": "src",
+    "rootDir": "src",
+    "strict": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "incremental": true,
+    "allowJs": true,
+    "removeComments": true,
+    "paths": { "@/*": ["*"] }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
