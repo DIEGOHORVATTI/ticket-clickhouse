@@ -7,26 +7,6 @@ import cors from '@elysiajs/cors'
 import { PORT, version } from '@/constants/config'
 
 import { router } from './router'
-import { User } from './modules/users/domain'
-
-async function removeEmailIndexes() {
-  try {
-    const indexes = await User.model.collection.indexes()
-
-    const emailIndexes = indexes.filter(index => index.key.email)
-
-    for (const index of emailIndexes) {
-      if (index.name) {
-        await User.model.collection.dropIndex(index.name)
-        console.log(`Índice removido: ${index.name}`)
-      }
-    }
-
-    console.log('Todos os índices relacionados ao campo "email" foram removidos.')
-  } catch (error) {
-    console.error('Erro ao remover índices:', error)
-  }
-}
 
 new Elysia()
   .use(
@@ -38,7 +18,6 @@ new Elysia()
     })
   )
   .use(rateLimit)
-  .onStart(removeEmailIndexes)
   .onError(({ code, error }) => {
     if (code === 'NOT_FOUND') return 'Route not found 😭'
 

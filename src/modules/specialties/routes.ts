@@ -1,7 +1,5 @@
 import { Elysia, t as Type } from 'elysia'
 
-import { jwt } from '@/middlewares/jwt'
-
 import { createSpecialtyService } from '@/modules/specialties/use-cases/create'
 import { getAllSpecialtiesService } from '@/modules/specialties/use-cases/get-all'
 import { updateSpecialtyService } from '@/modules/specialties/use-cases/update'
@@ -10,7 +8,6 @@ import { getOneSpecialtyService } from './use-cases/get-one'
 import { Specialty } from './domain'
 
 const router = new Elysia({ tags: ['Especialidade'], prefix: '/specialties' })
-  .use(jwt)
   .post(
     '/',
     async ({ body }) => {
