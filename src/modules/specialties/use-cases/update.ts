@@ -1,8 +1,8 @@
 import { error } from 'elysia'
 
-import { ISpecialty, CallEvent } from '@/modules/specialties/domain'
+import { ICallEvent, CallEvent } from '@/modules/specialties/domain'
 
-export const updateSpecialtyService = async (id: string, data: ISpecialty) => {
+export const updateSpecialtyService = async (id: string, data: ICallEvent) => {
   const specialty = await CallEvent.model.findById(id)
   if (!specialty) {
     throw error('Not Found', { error: 'Especialidade não encontrada' })

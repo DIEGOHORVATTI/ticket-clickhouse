@@ -1,8 +1,8 @@
 import { error } from 'elysia'
 
-import { ISpecialty, CallEvent } from '@/modules/specialties/domain'
+import { ICallEvent, CallEvent } from '@/modules/specialties/domain'
 
-export const createSpecialtyService = async (data: ISpecialty) => {
+export const createSpecialtyService = async (data: ICallEvent) => {
   const existingSpecialty = await CallEvent.model.findOne({ name: data.name })
   if (existingSpecialty) {
     throw error('Conflict', { error: 'Especialidade já cadastrada' })

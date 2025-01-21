@@ -6,7 +6,7 @@ const callStatus = {
   rejected: 'rejected'
 }
 
-export const schema = Type.Object({
+export const schema = {
   callId: Type.String({
     required: true,
     index: true
@@ -30,6 +30,6 @@ export const schema = Type.Object({
   }),
   duration: Type.Number(),
   notes: Type.String()
-})
+}
 
 export const CallEventValidation = { schema, composition: Type.Object(schema) }

@@ -6,22 +6,47 @@ import { schemaFactory } from '@/shared/schema-factory'
 
 import { CallEventValidation } from './validation'
 
-export type ISpecialty = typeof CallEventValidation.composition.static
+export type ICallEvent = typeof CallEventValidation.composition.static
 
-const schema = new Schema<ISpecialty, Model<ISpecialty>>(
+const schema = new Schema<ICallEvent, Model<ICallEvent>>(
   {
-    name: { type: String, required: true, unique: true },
-    description: { type: String },
-    active: { type: Boolean, default: true }
-  } satisfies SchemaFactoryProps<ISpecialty>,
+    callId: {
+      type: String,
+      required: true
+    },
+    timestamp: {
+      type: Date,
+      required: true,
+      default: new Date()
+    },
+    status: {
+      type: String,
+      required: true
+    },
+    caller: {
+      id: String,
+      name: String,
+      phoneNumber: String
+    },
+    agent: {
+      id: String,
+      name: String
+    },
+    duration: {
+      type: Number
+    },
+    notes: {
+      type: String
+    }
+  } satisfies SchemaFactoryProps<ICallEvent>,
   {
-    collection: collectionsData.Specialty.collection,
+    collection: collectionsData.CallEvent.collection,
     timestamps: true
   }
 )
 
-export const CallEvent = schemaFactory<ISpecialty, {}, typeof CallEventValidation>({
+export const CallEvent = schemaFactory<ICallEvent, {}, typeof CallEventValidation>({
   schema,
-  name: collectionsData.Specialty.name,
+  name: collectionsData.CallEvent.name,
   validation: CallEventValidation
 })
