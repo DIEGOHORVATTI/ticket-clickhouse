@@ -13,9 +13,9 @@ export const getAllSpecialtiesService = async ({
 
   const options = paginationSettings({ page, limit })
 
-  const { data: specialties, ...pagination } = await CallEvent.model.paginate(queryFilters, options).catch(() => {
+  const { data: callEvent, ...pagination } = await CallEvent.model.paginate(queryFilters, options).catch(() => {
     throw error('Internal Server Error', { error: 'Falha ao buscar callEvents' })
   })
 
-  return { specialties, pagination }
+  return { callEvent, pagination }
 }

@@ -65,12 +65,16 @@ export const schema = {
   media: Type.Optional(
     Type.Object(
       {
-        type: Type.String({
-          description: 'Tipo da mídia'
-        }),
-        submedia: Type.String({
-          description: 'Subtipo da mídia'
-        })
+        type: Type.Optional(
+          Type.String({
+            description: 'Tipo da mídia'
+          })
+        ),
+        submedia: Type.Optional(
+          Type.String({
+            description: 'Subtipo da mídia'
+          })
+        )
       },
       { description: 'tipo da mídia e submídia' }
     )
@@ -83,21 +87,31 @@ export const schema = {
   interlocutor: Type.Optional(
     Type.Object(
       {
-        type: Type.String({
-          description: 'Tipo de interlocutor'
-        }),
-        id: Type.String({
-          description: 'Identificador do interlocutor'
-        }),
-        flgSource: Type.Boolean({
-          description: 'Indica se o interlocutor é a fonte principal'
-        }),
-        identity: Type.String({
-          description: 'Identidade do interlocutor'
-        }),
-        chatIdentity: Type.String({
-          description: 'Identidade do chat do interlocutor'
-        })
+        type: Type.Optional(
+          Type.String({
+            description: 'Tipo de interlocutor'
+          })
+        ),
+        id: Type.Optional(
+          Type.String({
+            description: 'Identificador do interlocutor'
+          })
+        ),
+        flgSource: Type.Optional(
+          Type.Boolean({
+            description: 'Indica se o interlocutor é a fonte principal'
+          })
+        ),
+        identity: Type.Optional(
+          Type.String({
+            description: 'Identidade do interlocutor'
+          })
+        ),
+        chatIdentity: Type.Optional(
+          Type.String({
+            description: 'Identidade do chat do interlocutor'
+          })
+        )
       },
       { description: 'quem está interagindo com o serviço/agente' }
     )
@@ -105,18 +119,26 @@ export const schema = {
   attendant: Type.Optional(
     Type.Object(
       {
-        type: Type.String({
-          description: 'Tipo do atendente'
-        }),
-        id: Type.String({
-          description: 'Identificador do atendente'
-        }),
-        flgSource: Type.Boolean({
-          description: 'Indica se o atendente é a fonte principal'
-        }),
-        identity: Type.String({
-          description: 'Identidade do atendente'
-        })
+        type: Type.Optional(
+          Type.String({
+            description: 'Tipo do atendente'
+          })
+        ),
+        id: Type.Optional(
+          Type.String({
+            description: 'Identificador do atendente'
+          })
+        ),
+        flgSource: Type.Optional(
+          Type.Boolean({
+            description: 'Indica se o atendente é a fonte principal'
+          })
+        ),
+        identity: Type.Optional(
+          Type.String({
+            description: 'Identidade do atendente'
+          })
+        )
       },
       { description: 'quando já tem o agente envolvido na chamada' }
     )

@@ -6,7 +6,7 @@ import { removeCallEventService } from '@/modules/callEvent/use-cases/remove'
 import { getOneCallEventService } from './use-cases/get-one'
 import { CallEvent } from './domain'
 
-const router = new Elysia({ tags: ['CallEvent'], prefix: '/specialties' })
+const router = new Elysia({ tags: ['CallEvent'], prefix: '/call-event' })
   .post(
     '/',
     async ({ body }) => {
