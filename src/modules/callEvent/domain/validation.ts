@@ -40,7 +40,6 @@ export const causedBy = [
 
 export const schema = {
   callId: Type.String({
-    required: true,
     description: 'callId do Neo para a chamada'
   }),
   callIdHold: Type.String({
@@ -58,11 +57,9 @@ export const schema = {
   media: Type.Object(
     {
       type: Type.String({
-        required: true,
         description: 'Tipo da mídia'
       }),
       submedia: Type.String({
-        required: true,
         description: 'Subtipo da mídia'
       })
     },
@@ -74,23 +71,18 @@ export const schema = {
   interlocutor: Type.Object(
     {
       type: Type.String({
-        required: true,
         description: 'Tipo de interlocutor'
       }),
       id: Type.String({
-        required: true,
         description: 'Identificador do interlocutor'
       }),
       flgSource: Type.Boolean({
-        required: true,
         description: 'Indica se o interlocutor é a fonte principal'
       }),
       identity: Type.String({
-        required: true,
         description: 'Identidade do interlocutor'
       }),
       chatIdentity: Type.String({
-        required: true,
         description: 'Identidade do chat do interlocutor'
       })
     },
@@ -99,19 +91,15 @@ export const schema = {
   attendant: Type.Object(
     {
       type: Type.String({
-        required: true,
         description: 'Tipo do atendente'
       }),
       id: Type.String({
-        required: true,
         description: 'Identificador do atendente'
       }),
       flgSource: Type.Boolean({
-        required: true,
         description: 'Indica se o atendente é a fonte principal'
       }),
       identity: Type.String({
-        required: true,
         description: 'Identidade do atendente'
       })
     },
@@ -122,7 +110,6 @@ export const schema = {
     default: false
   }),
   flgIncoming: Type.Boolean({
-    required: true,
     description: 'indica a direção, true é Entrante, false é Sainte',
     default: true
   }),

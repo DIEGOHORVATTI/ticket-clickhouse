@@ -10,7 +10,7 @@ export type ICallEvent = typeof CallEventValidation.composition.static
 
 const schema = new Schema<ICallEvent, Model<ICallEvent>>(
   {
-    callId: { type: String, required: true, description: 'callId do Neo para a chamada' },
+    callId: { type: String, description: 'callId do Neo para a chamada' },
     callIdHold: { type: String, description: 'callId da chamada retida - usado quando transferência sob consulta' },
     originalCallId: {
       type: String,
@@ -24,12 +24,10 @@ const schema = new Schema<ICallEvent, Model<ICallEvent>>(
     media: {
       type: {
         type: String,
-        required: true,
         description: 'Tipo da mídia'
       },
       submedia: {
         type: String,
-        required: true,
         description: 'Subtipo da mídia'
       }
     },
@@ -37,56 +35,46 @@ const schema = new Schema<ICallEvent, Model<ICallEvent>>(
     interlocutor: {
       type: {
         type: String,
-        required: true,
         description: 'Tipo de interlocutor'
       },
       id: {
         type: String,
-        required: true,
         description: 'Identificador do interlocutor'
       },
       flgSource: {
         type: Boolean,
-        required: true,
         description: 'Indica se o interlocutor é a fonte principal'
       },
       identity: {
         type: String,
-        required: true,
         description: 'Identidade do interlocutor'
       },
       chatIdentity: {
         type: String,
-        required: true,
         description: 'Identidade do chat do interlocutor'
       }
     },
     attendant: {
       type: {
         type: String,
-        required: true,
         description: 'Tipo do atendente'
       },
       id: {
         type: String,
-        required: true,
         description: 'Identificador do atendente'
       },
       flgSource: {
         type: Boolean,
-        required: true,
         description: 'Indica se o atendente é a fonte principal'
       },
       identity: {
         type: String,
-        required: true,
         description: 'Identidade do atendente'
       }
     },
     flgConsult: { type: Boolean, default: false, description: 'indica se a interação é uma consulta' },
     flgIncoming: {
       type: Boolean,
-      required: true,
       default: true,
       description: 'indica a direção, true é Entrante, false é Sainte'
     },
