@@ -42,89 +42,117 @@ export const schema = {
   callId: Type.String({
     description: 'callId do Neo para a chamada'
   }),
-  callIdHold: Type.String({
-    description: 'callId da chamada retida - usado quando transferência sob consulta'
-  }),
-  originalCallId: Type.String({
-    description: 'callId da chamada original - usado em transferência para poder relacionar os atendimentos'
-  }),
-  serviceId: Type.String({
-    description: 'id do serviço associado à chamada'
-  }),
-  externalCallId: Type.String({
-    description: 'identificador da chamada utilizado por processo externo ao Neo (ex. chave do PABX)'
-  }),
-  media: Type.Object(
-    {
-      type: Type.String({
-        description: 'Tipo da mídia'
-      }),
-      submedia: Type.String({
-        description: 'Subtipo da mídia'
-      })
-    },
-    { description: 'tipo da mídia e submídia' }
+  callIdHold: Type.Optional(
+    Type.String({
+      description: 'callId da chamada retida - usado quando transferência sob consulta'
+    })
   ),
-  expectedServiceTime: Type.Number({
-    description: 'tempo esperado de atendimento em segundos'
-  }),
-  interlocutor: Type.Object(
-    {
-      type: Type.String({
-        description: 'Tipo de interlocutor'
-      }),
-      id: Type.String({
-        description: 'Identificador do interlocutor'
-      }),
-      flgSource: Type.Boolean({
-        description: 'Indica se o interlocutor é a fonte principal'
-      }),
-      identity: Type.String({
-        description: 'Identidade do interlocutor'
-      }),
-      chatIdentity: Type.String({
-        description: 'Identidade do chat do interlocutor'
-      })
-    },
-    { description: 'quem está interagindo com o serviço/agente' }
+  originalCallId: Type.Optional(
+    Type.String({
+      description: 'callId da chamada original - usado em transferência para poder relacionar os atendimentos'
+    })
   ),
-  attendant: Type.Object(
-    {
-      type: Type.String({
-        description: 'Tipo do atendente'
-      }),
-      id: Type.String({
-        description: 'Identificador do atendente'
-      }),
-      flgSource: Type.Boolean({
-        description: 'Indica se o atendente é a fonte principal'
-      }),
-      identity: Type.String({
-        description: 'Identidade do atendente'
-      })
-    },
-    { description: 'quando já tem o agente envolvido na chamada' }
+  serviceId: Type.Optional(
+    Type.String({
+      description: 'id do serviço associado à chamada'
+    })
   ),
-  flgConsult: Type.Boolean({
-    description: 'indica se a interação é uma consulta',
-    default: false
-  }),
-  flgIncoming: Type.Boolean({
-    description: 'indica a direção, true é Entrante, false é Sainte',
-    default: true
-  }),
-  associatedData: Type.String({
-    description: 'dados associados da chamada'
-  }),
-  protocol: Type.String({
-    description: 'Protocolo da chamada'
-  }),
-  callbackId: Type.String({
-    description: 'id do contato do callback, indica que foi uma chamada gerada pelo callback'
-  }),
-  flgMonitoring: Type.String({
-    description: 'indica se a chamada está sendo monitorada enviando qual ramal está sendo monitorado'
-  }),
+  externalCallId: Type.Optional(
+    Type.String({
+      description: 'identificador da chamada utilizado por processo externo ao Neo (ex. chave do PABX)'
+    })
+  ),
+  media: Type.Optional(
+    Type.Object(
+      {
+        type: Type.String({
+          description: 'Tipo da mídia'
+        }),
+        submedia: Type.String({
+          description: 'Subtipo da mídia'
+        })
+      },
+      { description: 'tipo da mídia e submídia' }
+    )
+  ),
+  expectedServiceTime: Type.Optional(
+    Type.Number({
+      description: 'tempo esperado de atendimento em segundos'
+    })
+  ),
+  interlocutor: Type.Optional(
+    Type.Object(
+      {
+        type: Type.String({
+          description: 'Tipo de interlocutor'
+        }),
+        id: Type.String({
+          description: 'Identificador do interlocutor'
+        }),
+        flgSource: Type.Boolean({
+          description: 'Indica se o interlocutor é a fonte principal'
+        }),
+        identity: Type.String({
+          description: 'Identidade do interlocutor'
+        }),
+        chatIdentity: Type.String({
+          description: 'Identidade do chat do interlocutor'
+        })
+      },
+      { description: 'quem está interagindo com o serviço/agente' }
+    )
+  ),
+  attendant: Type.Optional(
+    Type.Object(
+      {
+        type: Type.String({
+          description: 'Tipo do atendente'
+        }),
+        id: Type.String({
+          description: 'Identificador do atendente'
+        }),
+        flgSource: Type.Boolean({
+          description: 'Indica se o atendente é a fonte principal'
+        }),
+        identity: Type.String({
+          description: 'Identidade do atendente'
+        })
+      },
+      { description: 'quando já tem o agente envolvido na chamada' }
+    )
+  ),
+  flgConsult: Type.Optional(
+    Type.Boolean({
+      description: 'indica se a interação é uma consulta',
+      default: false
+    })
+  ),
+  flgIncoming: Type.Optional(
+    Type.Boolean({
+      description: 'indica a direção, true é Entrante, false é Sainte',
+      default: true
+    })
+  ),
+  associatedData: Type.Optional(
+    Type.String({
+      description: 'dados associados da chamada'
+    })
+  ),
+  protocol: Type.Optional(
+    Type.String({
+      description: 'Protocolo da chamada'
+    })
+  ),
+  callbackId: Type.Optional(
+    Type.String({
+      description: 'id do contato do callback, indica que foi uma chamada gerada pelo callback'
+    })
+  ),
+  flgMonitoring: Type.Optional(
+    Type.String({
+      description: 'indica se a chamada está sendo monitorada enviando qual ramal está sendo monitorado'
+    })
+  ),
   queuePosition: Type.Optional(
     Type.Number({
       description: 'registra a posição que o interlocutor estava na fila (abandono, transbordo)'
