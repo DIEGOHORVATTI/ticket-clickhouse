@@ -1,11 +1,11 @@
 import { error } from 'elysia'
 
-import { ICallEvent, CallEvent } from '@/modules/specialties/domain'
+import { ICallEvent, CallEvent } from '@/modules/callEvent/domain'
 
-export const updateSpecialtyService = async (id: string, data: ICallEvent) => {
+export const updateCallEventService = async (id: string, data: ICallEvent) => {
   const specialty = await CallEvent.model.findById(id)
   if (!specialty) {
-    throw error('Not Found', { error: 'Especialidade não encontrada' })
+    throw error('Not Found', { error: 'CallEvent não encontrada' })
   }
 
   if (data.name !== specialty.name) {
@@ -15,7 +15,7 @@ export const updateSpecialtyService = async (id: string, data: ICallEvent) => {
   Object.assign(specialty, data)
 
   await specialty.save().catch(() => {
-    throw error('Internal Server Error', { error: 'Falha ao atualizar especialidade' })
+    throw error('Internal Server Error', { error: 'Falha ao atualizar callEvent' })
   })
 
   return { specialty }
@@ -24,7 +24,7 @@ export const updateSpecialtyService = async (id: string, data: ICallEvent) => {
     const existingSpecialty = await CallEvent.model.findOne({ name: data.name })
 
     if (existingSpecialty) {
-      throw error('Conflict', { error: 'Já existe uma especialidade com este nome' })
+      throw error('Conflict', { error: 'Já existe uma callEvent com este nome' })
     }
   }
 }

@@ -1,6 +1,6 @@
 import { error } from 'elysia'
 
-import { CallEvent } from '@/modules/specialties/domain'
+import { CallEvent } from '@/modules/callEvent/domain'
 
 import { convertObjectToQuery, paginationSettings } from '@/shared'
 
@@ -14,7 +14,7 @@ export const getAllSpecialtiesService = async ({
   const options = paginationSettings({ page, limit })
 
   const { data: specialties, ...pagination } = await CallEvent.model.paginate(queryFilters, options).catch(() => {
-    throw error('Internal Server Error', { error: 'Falha ao buscar especialidades' })
+    throw error('Internal Server Error', { error: 'Falha ao buscar callEvents' })
   })
 
   return { specialties, pagination }
