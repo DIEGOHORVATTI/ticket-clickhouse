@@ -13,10 +13,11 @@ export const schema = {
   }),
   timestamp: Type.Date({
     required: true,
-    default: Date.now
+    default: new Date()
   }),
   status: Type.String({
     required: true,
+    default: callStatus.received,
     enum: Type.Enum(callStatus)
   }),
   caller: Type.Object({

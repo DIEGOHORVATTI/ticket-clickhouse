@@ -16,8 +16,7 @@ const schema = new Schema<ICallEvent, Model<ICallEvent>>(
     },
     timestamp: {
       type: Date,
-      required: true,
-      default: new Date()
+      required: true
     },
     status: {
       type: String,
