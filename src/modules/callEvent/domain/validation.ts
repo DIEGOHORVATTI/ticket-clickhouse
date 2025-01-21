@@ -1,5 +1,42 @@
 import { t as Type } from 'elysia'
-import { callbackRegState, causedBy, endReason, hookBy } from '.'
+
+export const hookBy = ['A', 'B', 'I']
+export const callbackRegState = [
+  'REGISTERED',
+  'REINCIDENT',
+  'SCHEDULED',
+  'FINAL_NOT_SUCCESS',
+  'FINAL_SUCCESS',
+  'ERROR',
+  'FINAL_HANDLED_REINCIDENT'
+]
+export const endReason = [
+  'FINISHED_HANDLED',
+  'OUT_OF_OPERATION',
+  'ABANDONED',
+  'OVERFLOWED',
+  'TRANSFERRED',
+  'DEVIATED_FROM_QUEUE',
+  'DESTINATION_BUSY',
+  'DESTINATION_NO_ANSWER',
+  'FAIL',
+  'FINISHED_RETENTION_TIMEOUT'
+]
+export const causedBy = [
+  'IN_QUEUE',
+  'IN_DEVICE',
+  'BEFORE_QUEUE',
+  'IN_GENERATION',
+  'INVALID_NUMBER',
+  'NOT_HANDLED_BY_AGENT',
+  'GENERIC',
+  'TO_AGENT',
+  'TO_QUEUE',
+  'TO_DEVICE',
+  'BY_ORIGIN',
+  'TO_QUEUE_BY_RETENTION_TIMEOUT',
+  'HSM_SEND_FAILURE'
+]
 
 export const schema = {
   callId: Type.String({

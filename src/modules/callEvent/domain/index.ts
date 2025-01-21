@@ -4,47 +4,9 @@ import { collectionsData } from '@/constants/config'
 
 import { schemaFactory } from '@/shared/schema-factory'
 
-import { CallEventValidation } from './validation'
+import { CallEventValidation, callbackRegState, causedBy, endReason } from './validation'
 
 export type ICallEvent = typeof CallEventValidation.composition.static
-
-export const hookBy = ['A', 'B', 'I']
-export const callbackRegState = [
-  'REGISTERED',
-  'REINCIDENT',
-  'SCHEDULED',
-  'FINAL_NOT_SUCCESS',
-  'FINAL_SUCCESS',
-  'ERROR',
-  'FINAL_HANDLED_REINCIDENT'
-]
-export const endReason = [
-  'FINISHED_HANDLED',
-  'OUT_OF_OPERATION',
-  'ABANDONED',
-  'OVERFLOWED',
-  'TRANSFERRED',
-  'DEVIATED_FROM_QUEUE',
-  'DESTINATION_BUSY',
-  'DESTINATION_NO_ANSWER',
-  'FAIL',
-  'FINISHED_RETENTION_TIMEOUT'
-]
-export const causedBy = [
-  'IN_QUEUE',
-  'IN_DEVICE',
-  'BEFORE_QUEUE',
-  'IN_GENERATION',
-  'INVALID_NUMBER',
-  'NOT_HANDLED_BY_AGENT',
-  'GENERIC',
-  'TO_AGENT',
-  'TO_QUEUE',
-  'TO_DEVICE',
-  'BY_ORIGIN',
-  'TO_QUEUE_BY_RETENTION_TIMEOUT',
-  'HSM_SEND_FAILURE'
-]
 
 const schema = new Schema<ICallEvent, Model<ICallEvent>>(
   {
@@ -146,7 +108,7 @@ const schema = new Schema<ICallEvent, Model<ICallEvent>>(
     flgPickUp: { type: Boolean, description: 'indica se o agente atendeu a chamada' },
     flgRecord: { type: Boolean, description: 'indica se a interação foi gravada' },
     tokenAi: { type: String, description: 'uuid com token referente à integração com IA no atendimento' },
-    hookBy: { type: String, enum: hookBy, description: 'quem desligou a chamada (A, B ou I)' },
+    hookBy: { type: String, enum: ['A', 'B', 'I'], description: 'quem desligou a chamada (A, B ou I)' },
     callbackRegState: {
       type: String,
       enum: callbackRegState,
