@@ -2,7 +2,6 @@ import { Elysia, t as Type } from 'elysia'
 
 import { createCallEventService } from '@/modules/callEvent/use-cases/create'
 import { getAllSpecialtiesService } from '@/modules/callEvent/use-cases/get-all'
-import { updateCallEventService } from '@/modules/callEvent/use-cases/update'
 import { removeCallEventService } from '@/modules/callEvent/use-cases/remove'
 import { getOneCallEventService } from './use-cases/get-one'
 import { CallEvent } from './domain'
@@ -29,18 +28,6 @@ const router = new Elysia({ tags: ['CallEvent'], prefix: '/specialties' })
     },
     {
       detail: { description: 'Busca uma callEvent' }
-    }
-  )
-  .put(
-    '/:id',
-    async ({ params: { id }, body }) => {
-      const { specialty } = await updateCallEventService(id, body)
-
-      return { message: 'CallEvent atualizada com sucesso', specialty }
-    },
-    {
-      body: CallEvent.validation.composition,
-      detail: { description: 'Atualiza uma callEvent' }
     }
   )
   .delete(
