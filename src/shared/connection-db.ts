@@ -5,7 +5,7 @@ import { createConnection } from 'mongoose'
 export const connectDB = createConnection(MONGO_URL, { dbName, maxPoolSize: 10 })
 
 connectDB.once('connected', () => {
-  console.info('🐋 Database connected')
+  console.info('\n🐋 Database connected')
 
   if (NODE_ENV) console.info(`🌟 ${NODE_ENV}`)
 
