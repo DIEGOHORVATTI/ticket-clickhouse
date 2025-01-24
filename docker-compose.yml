@@ -1,25 +1,25 @@
 services:
   # MongoDB service
-  mongodb:
-    image: mongo:6.0
-    container_name: mongodb
-    ports:
-      - '27017:27017'
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: password
-    volumes:
-      - mongodb_data:/data/db
-      - mongodb_config:/data/configdb
-    restart: always
+  # mongodb:
+  #   image: mongo:6.0
+  #   container_name: mongodb
+  #   ports:
+  #     - '27017:27017'
+  #   environment:
+  #     MONGO_INITDB_ROOT_USERNAME: root
+  #     MONGO_INITDB_ROOT_PASSWORD: password
+  #   volumes:
+  #     - mongodb_data:/data/db
+  #     - mongodb_config:/data/configdb
+  #   restart: always
 
   # ClickHouse service
   clickhouse:
     image: clickhouse/clickhouse-server:latest
     container_name: clickhouse
     ports:
-      - '8123:8123'
       - '9000:9000'
+      - '9001:9001'
     environment:
       CLICKHOUSE_DB: events_db
       CLICKHOUSE_USER: default
@@ -38,7 +38,7 @@ services:
       - '3000:3000'
     environment:
       MONGO_URI: mongodb://root:password@mongodb:27017
-      CLICKHOUSE_URL: http://clickhouse:8123
+      CLICKHOUSE_URL: http://clickhouse:9000
       CLICKHOUSE_USER: default
       CLICKHOUSE_PASSWORD: clickhouse
     depends_on:

@@ -7,7 +7,7 @@ export class ClickHouseService {
   constructor() {
     this.client = new ClickHouse({
       url: process.env.CLICKHOUSE_URL,
-      port: 8123,
+      port: 9000,
       debug: false,
       basicAuth: {
         username: process.env.CLICKHOUSE_USER,
@@ -82,13 +82,17 @@ export class ClickHouseService {
     }
 
     const fields = Object.keys(values).join(', ')
-    const placeholders = Object.keys(values).map(k => `'${values[k]}'`).join(', ')
+    const placeholders = Object.keys(values)
+      .map(k => `'${values[k]}'`)
+      .join(', ')
 
     await this.client
-      .query(`
+      .query(
+        `
         INSERT INTO call_events (${fields})
         VALUES (${placeholders})
-      `)
+      `
+      )
       .toPromise()
   }
 

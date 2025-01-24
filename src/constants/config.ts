@@ -12,7 +12,7 @@ const apiIntegrations = {
 
 // Environment variables
 export const NODE_ENV = process.env.NODE_ENV
-export const PORT = process.env.PORT || 3000
+export const PORT = process.env.PORT
 export { version } from '../../package.json'
 
 // Database configuration
