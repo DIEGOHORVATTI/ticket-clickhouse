@@ -81,8 +81,9 @@ export class ClickHouseService {
     }
 
     const fields = Object.keys(values).join(', ')
+
     const placeholders = Object.keys(values)
-      .map(k => `'${values[k]}'`)
+      .map(k => `'${values[k as keyof typeof values]}'`)
       .join(', ')
 
     await this.client
