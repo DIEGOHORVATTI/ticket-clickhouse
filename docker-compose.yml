@@ -13,6 +13,21 @@ services:
       - mongodb_config:/data/configdb
     restart: always
 
+  # ClickHouse service
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    container_name: clickhouse
+    ports:
+      - '8123:8123'
+      - '9000:9000'
+    environment:
+      CLICKHOUSE_DB: events_db
+      CLICKHOUSE_USER: default
+      CLICKHOUSE_PASSWORD: clickhouse
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+    restart: always
+
   # Bun + Elysia application service
   bun-elysia:
     build:
@@ -20,15 +35,21 @@ services:
       dockerfile: Dockerfile
     container_name: bun-elysia
     ports:
-      - '3000:3000' # Exposing Bun app on port 3000
-    environment: #mongodb://root:password@127.0.0.1:27017
+      - '3000:3000'
+    environment:
       MONGO_URI: mongodb://root:password@mongodb:27017
+      CLICKHOUSE_URL: http://clickhouse:8123
+      CLICKHOUSE_USER: default
+      CLICKHOUSE_PASSWORD: clickhouse
     depends_on:
       - mongodb
+      - clickhouse
     restart: always
 
 volumes:
   mongodb_data:
     driver: local
   mongodb_config:
+    driver: local
+  clickhouse_data:
     driver: local
