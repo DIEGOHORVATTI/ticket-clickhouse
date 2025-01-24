@@ -10,7 +10,6 @@ import { PORT, version } from '@/constants/config'
 import { router } from './router'
 
 new Elysia()
-  .use(sentry())
   .use(
     cors({
       preflight: true,
@@ -34,6 +33,7 @@ new Elysia()
     return error
   })
   .use(openApi)
-  .use(router(__dirname)) // Usar o roteador customizado
+  .use(router(__dirname))
+  .use(sentry())
   .get('/', () => `API is running 🚀: v${version}`) // Rota principal
   .listen(PORT, ({ url }) => console.info(`🦊 Elysia is running at ${url}`))
