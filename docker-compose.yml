@@ -35,7 +35,7 @@ services:
       dockerfile: Dockerfile
     container_name: bun-elysia
     ports:
-      - '3000:3000'
+      - '8000:8000'
     environment:
       MONGO_URI: mongodb://root:password@mongodb:27017
       CLICKHOUSE_URL: http://clickhouse:9000

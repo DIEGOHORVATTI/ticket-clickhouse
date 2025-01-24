@@ -23,7 +23,7 @@ RUN bun install
 COPY . .
 
 # Exponha a porta da aplicação
-EXPOSE 3000
+EXPOSE 8000
 
 # Execute o aplicativo
 CMD ["bun", "run", "start"]
