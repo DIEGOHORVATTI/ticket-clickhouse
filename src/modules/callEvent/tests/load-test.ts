@@ -12,10 +12,10 @@ async function runLoadTest() {
   const duckIcons = ['𓅰', '𓅬', '𓅭', '𓅮', '𓅯']
   let duckIndex = 0
 
-  console.time('Load Test')
+  console.time('---Load Testll')
 
   for (let i = 0; i < batches; i++) {
-    process.stdout.write(`\rProcessing batch ${i + 1}/${batches} ${duckIcons[duckIndex]} `)
+    process.stdout.write(`\r⚪Processing batch ${i + 1}/${batches} ${duckIcons[duckIndex]} `)
     duckIndex = (duckIndex + 1) % duckIcons.length
 
     const events = generateFakeCallEvents(batchSize)
@@ -26,7 +26,7 @@ async function runLoadTest() {
         // Sync to ClickHouse
         await clickhouse.syncCallEvent(savedEvent)
       } catch (error) {
-        console.error('Error processing event:', error)
+        console.error('🔴Error processing event:', error)
       }
     })
 
@@ -34,7 +34,7 @@ async function runLoadTest() {
   }
 
   console.timeEnd('𓆝 𓆟 𓆞 𓆝 𓆟Load Test𓆝 𓆟 𓆞 𓆝 𓆟')
-  console.log('\n\nAll batches processed successfully.')
+  console.log('\n\n🟢All batches processed successfully.')
 
   // Get metrics for the last hour
   const endDate = new Date()
