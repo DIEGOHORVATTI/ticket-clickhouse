@@ -4,10 +4,10 @@ services:
     image: mongo:6.0
     container_name: mongodb
     ports:
-      - '27017:27017'
+      - "${MONGO_PORT}:${MONGO_PORT}"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - mongodb_data:/data/db
       - mongodb_config:/data/configdb
@@ -18,12 +18,12 @@ services:
     image: clickhouse/clickhouse-server:latest
     container_name: clickhouse
     ports:
-      - '9000:9000'
-      - '9001:9001'
+      - "${CLICKHOUSE_PORT1}:${CLICKHOUSE_PORT1}"
+      - "${CLICKHOUSE_PORT2}:${CLICKHOUSE_PORT2}"
     environment:
-      CLICKHOUSE_DB: events_db
-      CLICKHOUSE_USER: default
-      CLICKHOUSE_PASSWORD: clickhouse
+      CLICKHOUSE_DB: ${CLICKHOUSE_DB}
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
     volumes:
       - clickhouse_data:/var/lib/clickhouse
     restart: always
@@ -35,12 +35,12 @@ services:
       dockerfile: Dockerfile
     container_name: bun-elysia
     ports:
-      - '8000:8000'
+      - "${PORT}:${PORT}"
     environment:
-      MONGO_URI: mongodb://root:password@mongodb:27017
-      CLICKHOUSE_URL: http://clickhouse:9000
-      CLICKHOUSE_USER: default
-      CLICKHOUSE_PASSWORD: clickhouse
+      MONGO_URI: ${MONGO_URI}
+      CLICKHOUSE_URL: ${CLICKHOUSE_URL}
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
     depends_on:
       - mongodb
       - clickhouse
