@@ -6,16 +6,15 @@ export class ClickHouseService {
 
   constructor() {
     this.client = new ClickHouse({
-      url: process.env.CLICKHOUSE_URL,
-      port: 9000,
-      debug: false,
+      url: process.env.CLICKHOUSE_URL, // URL do ClickHouse
+      debug: false, // Define se o modo debug está ativo
       basicAuth: {
-        username: process.env.CLICKHOUSE_USER,
-        password: process.env.CLICKHOUSE_PASSWORD
+        username: process.env.CLICKHOUSE_USER, // Usuário do ClickHouse
+        password: process.env.CLICKHOUSE_PASSWORD // Senha do ClickHouse
       },
-      isUseGzip: true,
-      format: 'json',
-      raw: false
+      isUseGzip: true, // Ativa compressão
+      format: 'json', // Define o formato como JSON
+      raw: false // Resposta processada
     })
 
     this.initializeClickHouse()
