@@ -2,6 +2,7 @@ import { Elysia } from 'elysia'
 
 import { openApi } from '@/middlewares/open-api'
 import { rateLimit } from '@/middlewares/rate-limit'
+import { sentry } from 'elysiajs-sentry'
 import cors from '@elysiajs/cors'
 
 import { PORT, version } from '@/constants/config'
@@ -9,6 +10,7 @@ import { PORT, version } from '@/constants/config'
 import { router } from './router'
 
 new Elysia()
+  .use(sentry())
   .use(
     cors({
       preflight: true,

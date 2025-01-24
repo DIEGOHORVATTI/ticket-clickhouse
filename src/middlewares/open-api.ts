@@ -6,13 +6,13 @@ export const openApi = swagger({
   path: '/docs',
   exclude: ['/docs', '/docs/json'],
   scalarConfig: {
-    favicon: 'https://www.icamaissaude.com.br/img/favicon.svg'
+    favicon: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQq04hgf7_92WDg5-mP2553bvCBKcXJWpi8Gg&s'
   },
   documentation: {
     info: {
       version,
-      title: 'ICA Bank | +Saúde API',
-      description: `API Ica Mais Saúde | Protegendo sua saúde e a de quem você ama.`
+      title: 'Poc ClickHouse',
+      description: `Veririfcando a viabilidade de uso do ClickHouse com NodeJS`
     }
   }
 })
