@@ -1,11 +1,12 @@
+import { ICallEvent } from '../domain'
 import { generateFakeCallEvents } from '../migrations/start'
 import { createCallEventService } from '../use-cases/create'
 
 import { clickhouseClient, executeClickhouseQuery } from '@/shared/clickhouse'
 
 async function runLoadTest() {
-  const totalEvents = 10_000
-  const batchSize = 1_000
+  const totalEvents = 1
+  const batchSize = 1
 
   const batches = Math.ceil(totalEvents / batchSize)
   const duckIcons = ['𓅰', '𓅬', '𓅭', '𓅮', '𓅯']
@@ -43,7 +44,7 @@ async function runLoadTest() {
   const endDate = new Date()
   const startDate = new Date(endDate.getTime() - 60 * 60 * 1000)
 
-  const getMetrics = executeClickhouseQuery<{}>('')
+  const getMetrics = executeClickhouseQuery<ICallEvent>('SELECT * FROM call_events LIMIT 10 OFFSET 10')
 
   console.log('\n📊 Metrics:', getMetrics)
 }
