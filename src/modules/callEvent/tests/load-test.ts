@@ -3,14 +3,21 @@ import { createCallEventService } from '../use-cases/create'
 import { ClickHouseService } from '../migrations/ClickHouseService'
 
 async function runLoadTest() {
+  const totalEvents = 10_000
+  const batchSize = 1_000
+
   const clickhouse = new ClickHouseService()
-  const batchSize = 1000
-  const totalEvents = 10000
   const batches = Math.ceil(totalEvents / batchSize)
+
+  const duckIcons = ['𓅰', '𓅬', '𓅭', '𓅮', '𓅯']
+  let duckIndex = 0
 
   console.time('Load Test')
 
   for (let i = 0; i < batches; i++) {
+    process.stdout.write(`\rProcessing batch ${i + 1}/${batches} ${duckIcons[duckIndex]} `)
+    duckIndex = (duckIndex + 1) % duckIcons.length
+
     const events = generateFakeCallEvents(batchSize)
     const promises = events.map(async event => {
       try {
@@ -24,15 +31,15 @@ async function runLoadTest() {
     })
 
     await Promise.all(promises)
-    console.log(`Processed batch ${i + 1}/${batches}`)
   }
 
-  console.timeEnd('Load Test')
+  console.timeEnd('𓆝 𓆟 𓆞 𓆝 𓆟Load Test𓆝 𓆟 𓆞 𓆝 𓆟')
+  console.log('\n\nAll batches processed successfully.')
 
   // Get metrics for the last hour
   const endDate = new Date()
   const startDate = new Date(endDate.getTime() - 60 * 60 * 1000)
-  
+
   const metrics = await clickhouse.getCallMetrics(startDate, endDate)
   console.log('Call Metrics:', metrics)
 

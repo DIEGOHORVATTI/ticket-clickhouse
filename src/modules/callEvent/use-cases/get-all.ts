@@ -13,9 +13,6 @@ export const getAllSpecialtiesService = async ({
 
   const options = paginationSettings({ page, limit })
 
-  console.clear()
-  console.log(queryFilters, options)
-
   const { data: callEvent, ...pagination } = await CallEvent.model.paginate(queryFilters, options).catch(err => {
     console.error(err)
 
