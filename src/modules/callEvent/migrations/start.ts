@@ -1,4 +1,10 @@
+import { v4 as uuidv4 } from 'uuid'
 import { ICallEvent } from '../domain'
+
+function isValidUUID(uuid: string): boolean {
+  const regex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+  return regex.test(uuid)
+}
 
 export function generateFakeCallEvents(count: number = 1) {
   const callEvents: Array<ICallEvent> = []
@@ -6,30 +12,16 @@ export function generateFakeCallEvents(count: number = 1) {
   for (let i = 0; i < count; i++) {
     const pair = i % 2 === 0
 
-    callEvents.push({
-      callId: `callId-${i}`,
-      callIdHold: `callIdHold-${i}`,
-      originalCallId: `originalCallId-${i}`,
-      serviceId: `serviceId-${i}`,
-      externalCallId: `externalCallId-${i}`,
-      media: {
-        type: 'type',
-        submedia: 'submedia'
-      },
+    const generatedEvent = {
+      callId: uuidv4(),
+      callIdHold: uuidv4(),
+      originalCallId: uuidv4(),
+      serviceId: uuidv4(),
+      externalCallId: uuidv4(),
+      media: { type: 'type', submedia: 'submedia' },
       expectedServiceTime: 100,
-      interlocutor: {
-        type: 'type',
-        id: 'id',
-        flgSource: true,
-        identity: 'identity',
-        chatIdentity: 'chatIdentity'
-      },
-      attendant: {
-        type: 'type',
-        id: 'id',
-        flgSource: false,
-        identity: 'identity'
-      },
+      interlocutor: { type: 'type', id: uuidv4(), flgSource: true, identity: 'identity', chatIdentity: 'chatIdentity' },
+      attendant: { type: 'type', id: uuidv4(), flgSource: false, identity: 'identity' },
       flgConsult: pair,
       flgIncoming: !pair,
       associatedData: 'associatedData',
@@ -45,7 +37,16 @@ export function generateFakeCallEvents(count: number = 1) {
       callbackRegState: 'REGISTERED',
       endReason: 'FINISHED_HANDLED',
       causedBy: 'IN_QUEUE'
-    } satisfies ICallEvent)
+    }
+
+    Object.keys(generatedEvent).forEach(key => {
+      const value = generatedEvent[key as keyof ICallEvent]
+      if (typeof value === 'string' && isValidUUID(value)) {
+        console.log(`${key}: Valid UUID`)
+      }
+    })
+
+    callEvents.push(generatedEvent)
   }
 
   return callEvents
