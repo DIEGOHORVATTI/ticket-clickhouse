@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Call Events Real-time Monitor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+
+        #events {
+            margin-top: 20px;
+        }
+
+        .event {
+            background-color: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .event-time {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .status {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .connected {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .disconnected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Call Events Real-time Monitor</h1>
+    <div id="connection-status" class="status disconnected">Disconnected</div>
+    <div id="events"></div>
+
+    <script>
+        const eventsContainer = document.getElementById('events');
+        const statusElement = document.getElementById('connection-status');
+        let ws;
+
+        function connect() {
+            ws = new WebSocket('ws://localhost:8000/call-event/ws');
+
+            ws.onopen = () => {
+                statusElement.textContent = 'Connected';
+                statusElement.className = 'status connected';
+                ws.send('subscribe');
+            };
+
+            ws.onclose = () => {
+                statusElement.textContent = 'Disconnected - Reconnecting...';
+                statusElement.className = 'status disconnected';
+                setTimeout(connect, 1000);
+            };
+
+            ws.onmessage = (event) => {
+                const message = JSON.parse(event.data);
+
+                if (message.type === 'initial') {
+                    eventsContainer.innerHTML = '';
+                    message.data.forEach(addEvent);
+                } else if (message.type === 'update') {
+                    message.data.forEach(addEvent);
+                }
+            };
+        }
+
+        function addEvent(event) {
+            const eventElement = document.createElement('div');
+            eventElement.className = 'event';
+
+            console.log(event)
+
+            const time = new Date(event.createdAt).toLocaleString();
+
+            eventElement.innerHTML = `
+                <div class="event-time">${time}</div>
+                <div><strong>Call ID:</strong> ${event.callId}</div>
+                <div><strong>Protocol:</strong> ${event.protocol || 'N/A'}</div>
+                <div><strong>Service ID:</strong> ${event.serviceId || 'N/A'}</div>
+                <div><strong>Status:</strong> ${event.endReason || 'Active'}</div>
+            `;
+
+            eventsContainer.insertBefore(eventElement, eventsContainer.firstChild);
+        }
+
+        connect();
+    </script>
+</body>
+
+</html>
