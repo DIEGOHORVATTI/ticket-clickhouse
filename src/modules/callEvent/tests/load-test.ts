@@ -1,67 +1,79 @@
-import { generateFakeCallEvents } from '../migrations/start'
-import { createCallEventService } from '../use-cases/create'
+import { clickhouseClient } from '@/shared/clickhouse'
 
-import { clickhouseClient, executeClickhouseQuery } from '@/shared/clickhouse'
-
-async function runLoadTest() {
-  // create database
-  await clickhouseClient.query({
-    query: 'CREATE DATABASE IF NOT EXISTS default',
-    format: 'JSONEachRow'
-  })
-
-  // create table
-  await clickhouseClient.query({
-    query: `
-      CREATE TABLE IF NOT EXISTS call_events (
-        id UUID,
-        call_id UUID,
-        type String,
-        timestamp DateTime,
-        metadata String
-      ) ENGINE = MergeTree()
-      ORDER BY (id)
-    `,
-    format: 'JSONEachRow'
-  })
-
-  const totalEvents = 2
-  const batchSize = 1
-
-  const batches = Math.ceil(totalEvents / batchSize)
-
-  for (let i = 0; i < batches; i++) {
-    process.stdout.write(`\r⚪ Processing batch ${i + 1}/${batches} `)
-
-    const events = generateFakeCallEvents(batchSize)
-
-    const promises = events.map(async event => {
-      try {
-        const savedEvent = await createCallEventService(event)
-
-        await clickhouseClient.insert({
-          table: 'call_events',
-          values: [savedEvent],
-          format: 'JSONEachRow'
-        })
-      } catch (error) {
-        console.error('🔴 Error processing event:', error)
-      }
-    })
-
-    await Promise.all(promises) // Aguarda todos os eventos do lote serem processados
-  }
-
-  console.log('\n\n🟢 All batches processed successfully.')
-
-  /*  
-  // Exemplo para métricas (descomentável se necessário no futuro)
-  const endDate = new Date()
-  const startDate = new Date(endDate.getTime() - 60 * 60 * 1000)
-
-  const getMetrics = executeClickhouseQuery<ICallEvent>('SELECT * FROM call_events LIMIT 10 OFFSET 10')
-
-  console.log('\n📊 Metrics:', getMetrics) */
+const formatDateTime = (date: Date) => {
+  const pad = (num: number, size: number) => num.toString().padStart(size, '0')
+  return (
+    `${date.getFullYear()}-${pad(date.getMonth() + 1, 2)}-${pad(date.getDate(), 2)} ` +
+    `${pad(date.getHours(), 2)}:${pad(date.getMinutes(), 2)}:${pad(date.getSeconds(), 2)}.${pad(
+      date.getMilliseconds(),
+      3
+    )}`
+  )
 }
 
-runLoadTest().catch(console.error)
+const generateRandomData = () => {
+  return {
+    _id: crypto.randomUUID(),
+    domain: 'devpl3',
+    event: 'tktNewCall',
+    callId: crypto.randomUUID(),
+    externalCallId: Math.floor(Math.random() * 100000000),
+    iterationLevel: Math.floor(Math.random() * 10) + 1,
+    serviceId: crypto.randomUUID(),
+    expectedServiceTime: Math.floor(Math.random() * 1000),
+    media_type: 'VOICE',
+    interlocutor_identity: (Math.floor(Math.random() * 1000000) + 1000000).toString(),
+    flgConsult: Math.random() < 0.5,
+    flgIncoming: Math.random() < 0.5,
+    associatedData: '',
+    protocol: `2025${Math.floor(Math.random() * 100000000)
+      .toString()
+      .padStart(8, '0')}`,
+    eventDate_startDt: formatDateTime(new Date()),
+    contact: crypto.randomUUID()
+  }
+}
+
+const runLoadTest = async () => {
+  try {
+    console.log('Creating table...')
+    const createTableQuery = `
+      CREATE TABLE IF NOT EXISTS call_tickets (
+        _id String,
+        domain String,
+        event String,
+        callId String,
+        externalCallId String,
+        iterationLevel Int32,
+        serviceId String,
+        expectedServiceTime Int32,
+        media_type String,
+        interlocutor_identity String,
+        flgConsult UInt8,
+        flgIncoming UInt8,
+        associatedData String,
+        protocol String,
+        eventDate_startDt DateTime64(3),
+        contact String
+      ) ENGINE = MergeTree() ORDER BY (_id)
+    `
+
+    await clickhouseClient.exec({ query: createTableQuery })
+    console.log('Table created successfully.')
+
+    console.log('Generating and inserting data...')
+    const rows = Array.from({ length: 1000 }, generateRandomData)
+
+    await clickhouseClient.insert({
+      table: 'call_tickets',
+      values: rows,
+      format: 'JSONEachRow'
+    })
+
+    console.log('Data successfully inserted.')
+  } catch (error) {
+    console.error('Error during the load test:', error)
+  }
+}
+
+runLoadTest()
