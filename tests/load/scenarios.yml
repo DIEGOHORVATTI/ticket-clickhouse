@@ -1,0 +1,37 @@
+config:
+  target: "http://localhost:8000"
+  phases:
+    - duration: 60
+      arrivalRate: 5
+      name: "Warm up"
+    - duration: 120
+      arrivalRate: 10
+      rampTo: 50
+      name: "Ramp up load"
+    - duration: 180
+      arrivalRate: 50
+      name: "Sustained load"
+
+scenarios:
+  - name: "Call Events Flow"
+    flow:
+      - post:
+          url: "/call-event"
+          json:
+            callId: "{{ $randomString() }}"
+            serviceId: "{{ $randomString() }}"
+            protocol: "{{ $randomString() }}"
+            media:
+              type: "VOICE"
+            expectedServiceTime: 0
+            flgConsult: false
+            flgIncoming: true
+      
+      - get:
+          url: "/call-event/clickhouse"
+      
+      - get:
+          url: "/call-event/analytics/by-service"
+      
+      - get:
+          url: "/call-event/analytics/hourly-distribution"

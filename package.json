@@ -20,7 +20,8 @@
     "@types/bun": "^1.2.0",
     "@types/nodemailer": "^6.4.17",
     "@types/react": "^19.0.8",
-    "@types/react-dom": "^19.0.3"
+    "@types/react-dom": "^19.0.3",
+    "artillery": "^2.0.3"
   },
   "peerDependencies": {
     "typescript": "^5.7.2"
@@ -29,6 +30,7 @@
     "dev": "bun run --watch src/index.ts",
     "start": "bun run src/index.ts",
     "lint:fix": "eslint --fix --ext .ts,.tsx .",
-    "prettier": "prettier --config .prettierrc 'src/**/*.ts' --write"
+    "prettier": "prettier --config .prettierrc 'src/**/*.ts' --write",
+    "test:load": "artillery run tests/load/scenarios.yml"
   }
 }
