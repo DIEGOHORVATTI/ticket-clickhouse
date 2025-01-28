@@ -39,6 +39,31 @@ export const causedBy = [
 ]
 
 export const schema = {
+  domain: Type.String({
+    description: 'domínio da chamada'
+  }),
+  event: Type.String({
+    description: 'evento da chamada'
+  }),
+  iterationLevel: Type.Optional(
+    Type.Number({
+      description: 'nível de iteração da chamada'
+    })
+  ),
+  contact: Type.String({
+    description: 'id do contato'
+  }),
+  eventDate: Type.Object(
+    {
+      startDt: Type.String({
+        description: 'data de início da chamada'
+      }),
+      duration: Type.Number({
+        description: 'duração da chamada em segundos'
+      })
+    },
+    { description: 'data e duração da chamada' }
+  ),
   callId: Type.String({
     description: 'callId do Neo para a chamada'
   }),
@@ -58,7 +83,7 @@ export const schema = {
     })
   ),
   externalCallId: Type.Optional(
-    Type.String({
+    Type.Number({
       description: 'identificador da chamada utilizado por processo externo ao Neo (ex. chave do PABX)'
     })
   ),

@@ -1,15 +1,18 @@
 import { error } from 'elysia'
 import { ICallEvent, CallEvent } from '@/modules/callEvent/domain'
-import { insertCallEventClickhouse } from './insert-clickhouse'
+import { clickhouseClient } from '@/shared/clickhouse'
 
-export const createCallEventService = async (data: ICallEvent) => {
+export const createCallEventService = async (values: ICallEvent) => {
   try {
-    // Save to MongoDB
-    const specialty = new CallEvent.model(data)
+    const specialty = new CallEvent.model(values)
+
     await specialty.save()
 
-    // Save to ClickHouse
-    await insertCallEventClickhouse(data)
+    await clickhouseClient.insert({
+      table: 'call_tickets',
+      values,
+      format: 'JSONEachRow'
+    })
 
     return specialty
   } catch (err) {

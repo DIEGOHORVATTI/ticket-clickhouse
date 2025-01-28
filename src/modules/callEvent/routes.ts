@@ -10,7 +10,7 @@ import { getOneCallEventService } from './use-cases/get-one'
 import { getNewEvents } from './use-cases/websocket-stream'
 
 import { createCallEventsTable } from '@/shared/clickhouse/schema'
-import { executeClickhouseQuery } from '@/shared/clickhouse'
+import { clickhouseClient, executeClickhouseQuery } from '@/shared/clickhouse'
 
 import { ICallEvent } from './domain'
 
@@ -84,11 +84,15 @@ const router = new Elysia({ tags: ['CallEvent'], prefix: '/call-event' })
   .post(
     '/',
     async ({ body }) => {
-      const specialty = await createCallEventService(body)
+      const callEvent = await createCallEventService(body)
 
-      await insertCallEventClickhouse(body)
+      await clickhouseClient.insert({
+        table: 'call_tickets',
+        values: body,
+        format: 'JSONEachRow'
+      })
 
-      return { message: 'CallEvent cadastrada com sucesso', specialty }
+      return { message: 'CallEvent cadastrada com sucesso', callEvent }
     },
     {
       body: CallEvent.validation.composition,

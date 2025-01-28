@@ -18,7 +18,7 @@ const schema = new Schema<ICallEvent, Model<ICallEvent>>(
     },
     serviceId: { type: String, description: 'id do serviço associado à chamada' },
     externalCallId: {
-      type: String,
+      type: Number,
       description: 'identificador da chamada utilizado por processo externo ao Neo (ex. chave do PABX)'
     },
     media: {
@@ -111,6 +111,26 @@ const schema = new Schema<ICallEvent, Model<ICallEvent>>(
       type: String,
       enum: causedBy,
       description: 'causa da condição de término da interação'
+    },
+    domain: {
+      type: String,
+      description: 'domínio do evento'
+    },
+    event: {
+      type: String,
+      description: 'evento associado'
+    },
+    iterationLevel: {
+      type: Number,
+      description: 'nível de iteração do evento'
+    },
+    eventDate: {
+      endDt: String,
+      duration: 3
+    },
+    contact: {
+      type: String,
+      description: 'id do contato'
     }
   } satisfies SchemaFactoryProps<ICallEvent>,
   {
