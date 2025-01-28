@@ -18,7 +18,7 @@ const schema = new Schema<ICallEvent, Model<ICallEvent>>(
     },
     serviceId: { type: String, description: 'id do serviço associado à chamada' },
     externalCallId: {
-      type: Number,
+      type: String,
       description: 'identificador da chamada utilizado por processo externo ao Neo (ex. chave do PABX)'
     },
     media: {
