@@ -61,7 +61,7 @@ const runLoadTest = async () => {
     await clickhouseClient.exec({ query: createTableQuery })
     console.log('🟢 Table created successfully.\n')
 
-    console.log('🟢 Generating and inserting data...')
+    console.log('🟢 Generating and inserting data...\n')
     const rows = Array.from({ length: 1000 }, generateRandomData)
 
     await clickhouseClient.insert({
