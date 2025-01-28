@@ -2,7 +2,6 @@ import { Elysia } from 'elysia'
 
 import { CallEvent } from './domain'
 
-import { insertCallEventClickhouse } from './use-cases/insert-clickhouse'
 import { createCallEventService } from './use-cases/create'
 import { getAllSpecialtiesService } from './use-cases/get-all'
 import { removeCallEventService } from './use-cases/remove'

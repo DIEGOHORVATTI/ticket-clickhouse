@@ -126,7 +126,7 @@ const schema = new Schema<ICallEvent, Model<ICallEvent>>(
     },
     eventDate: {
       endDt: String,
-      duration: 3
+      duration: Number
     },
     contact: {
       type: String,
