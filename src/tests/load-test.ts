@@ -59,9 +59,9 @@ const runLoadTest = async () => {
     `
 
     await clickhouseClient.exec({ query: createTableQuery })
-    console.log('Table created successfully.')
+    console.log('🟢 Table created successfully.\n')
 
-    console.log('Generating and inserting data...')
+    console.log('🟢 Generating and inserting data...')
     const rows = Array.from({ length: 1000 }, generateRandomData)
 
     await clickhouseClient.insert({
@@ -70,9 +70,9 @@ const runLoadTest = async () => {
       format: 'JSONEachRow'
     })
 
-    console.log('Data successfully inserted.')
+    console.log('🟢 Data successfully inserted.')
   } catch (error) {
-    console.error('Error during the load test:', error)
+    console.error('🔴 Error during the load test:', error)
   }
 }
 
