@@ -1,0 +1,31 @@
+{
+  "transforms": [
+    {
+      "mode": "sql",
+      "include": "**/*.sql",
+      "emitTemplate": "{{dir}}/{{name}}.queries.ts"
+    },
+    {
+      "mode": "ts",
+      "include": "**/action.ts",
+      "emitTemplate": "{{dir}}/{{name}}.types.ts"
+    }
+  ],
+  "srcDir": "./src/",
+  "failOnError": false,
+  "camelCaseColumnNames": false,
+  "db": {
+    "dbName": "testdb",
+    "user": "user",
+    "password": "password",
+    "host": "127.0.0.1",
+    "port": 5432,
+    "ssl": false
+  },
+  "typesOverrides": {
+    "date": "string",
+    "timestamptz": "string",
+    "numeric": "number",
+    "my_enum": "./path/to/enums#MyEnum"
+  }
+}

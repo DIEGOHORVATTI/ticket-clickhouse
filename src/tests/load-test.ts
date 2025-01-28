@@ -1,6 +1,7 @@
+import { ICallEvent } from '@/modules/callEvent/domain'
 import { clickhouseClient } from '@/shared/clickhouse'
 
-const formatDateTime = (date: Date) => {
+const formatDateTime = (date: Date): string => {
   const pad = (num: number, size: number) => num.toString().padStart(size, '0')
   return (
     `${date.getFullYear()}-${pad(date.getMonth() + 1, 2)}-${pad(date.getDate(), 2)} ` +
@@ -11,7 +12,7 @@ const formatDateTime = (date: Date) => {
   )
 }
 
-const generateRandomData = () => {
+const generateRandomData = (): ICallEvent => {
   return {
     _id: crypto.randomUUID(),
     domain: 'devpl3',
@@ -33,34 +34,66 @@ const generateRandomData = () => {
   }
 }
 
+const typeMapping = {
+  string: 'String',
+  number: 'Int32',
+  boolean: 'UInt8',
+  object: 'DateTime64(3)'
+}
+
+function generateClickHouseSchema<T>(model: Record<keyof T, keyof typeof typeMapping>) {
+  const fields = Object.entries(model).map(([key, value]) => {
+    const type = typeof value
+
+    const dbType = typeMapping[type as keyof typeof typeMapping] || 'String'
+    return `  ${key} ${dbType}`
+  })
+
+  return fields.join(',\n')
+}
+
 const runLoadTest = async () => {
   try {
     console.log('Creating table...')
-    const createTableQuery = `
-      CREATE TABLE IF NOT EXISTS call_tickets (
-        _id String,
-        domain String,
-        event String,
-        callId String,
-        externalCallId String,
-        iterationLevel Int32,
-        serviceId String,
-        expectedServiceTime Int32,
-        interlocutor_identity String,
-        flgConsult UInt8,
-        flgIncoming UInt8,
-        associatedData String,
-        protocol String,
-        eventDate_startDt DateTime64(3),
-        contact String
-      ) ENGINE = MergeTree() ORDER BY (_id)
-    `
+    const newLocal = generateClickHouseSchema<ICallEvent>({
+      domain: 'string',
+      event: 'string',
+      callId: 'string',
+      externalCallId: 'string',
+      iterationLevel: 'number',
+      serviceId: 'string',
+      expectedServiceTime: 'number',
+      flgConsult: 'boolean',
+      flgIncoming: 'boolean',
+      associatedData: 'string',
+      protocol: 'string',
+      contact: 'string',
+      eventDate: 'string',
+      callIdHold: 'string',
+      originalCallId: 'string',
+      media: 'string',
+      interlocutor: 'string',
+      attendant: 'string',
+      callbackId: 'string',
+      flgMonitoring: 'string',
+      queuePosition: 'string',
+      fidelization: 'string',
+      flgPickUp: 'string',
+      flgRecord: 'string',
+      tokenAi: 'string',
+      hookBy: 'string',
+      callbackRegState: 'string',
+      endReason: 'string',
+      causedBy: 'string'
+    })
 
-    await clickhouseClient.exec({ query: createTableQuery })
+    await clickhouseClient.exec({
+      query: `CREATE TABLE IF NOT EXISTS call_tickets (${newLocal}) ENGINE = MergeTree() ORDER BY (_id)`
+    })
     console.log('🟢 Table created successfully.\n')
 
     console.log('🟢 Generating and inserting data...\n')
-    const rows = Array.from({ length: 1000 }, generateRandomData)
+    const rows = Array.from({ length: 1000 }, () => generateRandomData())
 
     await clickhouseClient.insert({
       table: 'call_tickets',

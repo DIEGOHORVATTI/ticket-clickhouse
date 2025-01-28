@@ -17,6 +17,8 @@
     "uuid": "^11.0.5"
   },
   "devDependencies": {
+    "@pgtyped/cli": "^2.3.0",
+    "@pgtyped/query": "^2.3.0",
     "@types/bun": "^1.2.0",
     "@types/nodemailer": "^6.4.17",
     "@types/react": "^19.0.8",
@@ -29,6 +31,7 @@
   "scripts": {
     "dev": "bun run --watch src/index.ts",
     "start": "bun run src/index.ts",
+    "pgtyped": "bunx pgtyped -c pgtyped.config.json",
     "lint:fix": "eslint --fix --ext .ts,.tsx .",
     "prettier": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "test:load": "artillery run tests/load/scenarios.yml"
