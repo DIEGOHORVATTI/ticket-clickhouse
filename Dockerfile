@@ -14,7 +14,7 @@ ENV PATH="/root/.bun/bin:$PATH"
 WORKDIR /app
 
 # Copie package.json e bun.lockb primeiro para cache de dependências
-COPY package.json bun.lockb ./
+COPY package.json bun.lock ./
 
 # Instale as dependências com o Bun
 RUN bun install
