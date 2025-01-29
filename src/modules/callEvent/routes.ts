@@ -82,16 +82,16 @@ const router = new Elysia({ tags: ['CallEvent'], prefix: '/call-event' })
     async () => {
       const query = `
         SELECT 
-          serviceId,
-          count(*) as total_calls,
-          countIf(endReason = 'FINISHED_HANDLED') as handled_calls,
-          countIf(endReason = 'ABANDONED') as abandoned_calls,
-          avg(expectedServiceTime) as avg_service_time,
-          max(eventDate.duration) as max_duration,
-          min(eventDate.duration) as min_duration
+            serviceId,
+            count(*) AS total_calls,
+            countIf(endReason = 'FINISHED_HANDLED') AS handled_calls,
+            countIf(endReason = 'ABANDONED') AS abandoned_calls,
+            avg(toInt32OrNull(expectedServiceTime)) AS avg_service_time,  -- Convert to Int32
+            max(JSONExtractInt(event, 'duration')) AS max_duration,  -- Extract from JSON
+            min(JSONExtractInt(event, 'duration')) AS min_duration
         FROM call_tickets
         GROUP BY serviceId
-        ORDER BY total_calls DESC
+        ORDER BY total_calls DESC LIMIT 100
       `
 
       const stats = await executeClickhouseQuery(query)
