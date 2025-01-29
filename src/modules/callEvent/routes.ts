@@ -9,48 +9,20 @@ import { getOneCallEventService } from './use-cases/get-one'
 import { getNewEvents } from './use-cases/websocket-stream'
 
 import { createCallEventsTable } from '@/shared/clickhouse/schema'
-import { clickhouseClient, executeClickhouseQuery } from '@/shared/clickhouse'
+import { executeClickhouseQuery } from '@/shared/clickhouse'
 
 import { ICallEvent } from './domain'
 
 export async function queryCallEvents() {
   const query = `
-      SELECT *
-      FROM call_events
-      ORDER BY createdAt DESC
-      LIMIT 10
-    `
-
+    SELECT *,  
+      JSONExtractString(eventDate, 'startDt') AS start_time, 
+      JSONExtractInt(eventDate, 'duration') AS duration 
+    FROM call_tickets
+    ORDER BY start_time DESC
+    LIMIT 10
+  `
   return await executeClickhouseQuery<ICallEvent>(query)
-}
-
-export async function getCallsByService() {
-  const query = `
-    SELECT 
-      serviceId,
-      count(*) as total_calls,
-      countIf(endReason = 'FINISHED_HANDLED') as handled_calls,
-      countIf(endReason = 'ABANDONED') as abandoned_calls,
-      avg(expectedServiceTime) as avg_service_time
-    FROM call_events
-    GROUP BY serviceId
-    ORDER BY total_calls DESC
-  `
-  return executeClickhouseQuery(query)
-}
-
-export async function getHourlyDistribution() {
-  const query = `
-    SELECT 
-      toHour(createdAt) as hour,
-      count(*) as total_calls,
-      countIf(endReason = 'FINISHED_HANDLED') as handled_calls,
-      countIf(endReason = 'ABANDONED') as abandoned_calls
-    FROM call_events
-    GROUP BY hour
-    ORDER BY hour
-  `
-  return executeClickhouseQuery(query)
 }
 
 const router = new Elysia({ tags: ['CallEvent'], prefix: '/call-event' })
@@ -64,6 +36,7 @@ const router = new Elysia({ tags: ['CallEvent'], prefix: '/call-event' })
         const interval = setInterval(async () => {
           try {
             const newEvents = await getNewEvents()
+
             if (newEvents.length > 0) {
               ws.send({ type: 'update', data: newEvents })
             }
@@ -80,16 +53,11 @@ const router = new Elysia({ tags: ['CallEvent'], prefix: '/call-event' })
       }
     }
   })
+
   .post(
     '/',
     async ({ body }) => {
       const callEvent = await createCallEventService(body)
-
-      await clickhouseClient.insert({
-        table: 'call_tickets',
-        values: body,
-        format: 'JSONEachRow'
-      })
 
       return { message: 'CallEvent cadastrada com sucesso', callEvent }
     },
@@ -98,6 +66,7 @@ const router = new Elysia({ tags: ['CallEvent'], prefix: '/call-event' })
       detail: { description: 'Cadastra uma nova callEvent' }
     }
   )
+
   .get(
     '/clickhouse',
     async () => {
@@ -107,23 +76,53 @@ const router = new Elysia({ tags: ['CallEvent'], prefix: '/call-event' })
     },
     { detail: { description: 'Lista todos os eventos do ClickHouse' } }
   )
+
   .get(
     '/analytics/by-service',
     async () => {
-      const stats = await getCallsByService()
+      const query = `
+        SELECT 
+          serviceId,
+          count(*) as total_calls,
+          countIf(endReason = 'FINISHED_HANDLED') as handled_calls,
+          countIf(endReason = 'ABANDONED') as abandoned_calls,
+          avg(expectedServiceTime) as avg_service_time,
+          max(eventDate.duration) as max_duration,
+          min(eventDate.duration) as min_duration
+        FROM call_tickets
+        GROUP BY serviceId
+        ORDER BY total_calls DESC
+      `
+
+      const stats = await executeClickhouseQuery(query)
 
       return { message: 'Service statistics retrieved successfully', stats }
     },
     { detail: { description: 'Get call statistics grouped by service' } }
   )
+
   .get(
     '/analytics/hourly-distribution',
     async () => {
-      const distribution = await getHourlyDistribution()
+      const query = `
+        SELECT 
+          toHour(parseDateTimeBestEffort(JSONExtractString(eventDate, 'startDt'))) as hour,
+          count(*) as total_calls,
+          countIf(endReason = 'FINISHED_HANDLED') as handled_calls,
+          countIf(endReason = 'ABANDONED') as abandoned_calls,
+          avg(JSONExtractFloat(eventDate, 'duration')) as avg_duration
+        FROM call_tickets
+        GROUP BY hour
+        ORDER BY hour
+      `
+
+      const distribution = await executeClickhouseQuery(query)
+
       return { message: 'Hourly distribution retrieved successfully', distribution }
     },
     { detail: { description: 'Get hourly call distribution' } }
   )
+
   .get(
     '/setup-clickhouse',
     async () => {
@@ -133,6 +132,7 @@ const router = new Elysia({ tags: ['CallEvent'], prefix: '/call-event' })
     },
     { detail: { description: 'Creates ClickHouse table structure' } }
   )
+
   .get(
     '/:id',
     async ({ params: { id } }) => {
@@ -142,6 +142,7 @@ const router = new Elysia({ tags: ['CallEvent'], prefix: '/call-event' })
     },
     { detail: { description: 'Busca uma callEvent' } }
   )
+
   .delete(
     '/:id',
     async ({ params: { id } }) => {
@@ -153,6 +154,7 @@ const router = new Elysia({ tags: ['CallEvent'], prefix: '/call-event' })
       detail: { description: 'Remove uma callEvent' }
     }
   )
+
   .post(
     '/filters',
     async ({ body }) => {

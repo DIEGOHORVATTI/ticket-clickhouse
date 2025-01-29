@@ -1,37 +1,55 @@
 config:
-  target: "http://localhost:8000"
+  target: 'http://localhost:8000'
   phases:
     - duration: 60
       arrivalRate: 5
-      name: "Warm up"
+      name: 'Warm up'
     - duration: 120
       arrivalRate: 10
       rampTo: 50
-      name: "Ramp up load"
+      name: 'Ramp up load'
     - duration: 180
       arrivalRate: 50
-      name: "Sustained load"
+      name: 'Sustained load'
 
 scenarios:
-  - name: "Call Events Flow"
+  - name: 'Call Events Analytics Flow'
+    flow:
+      - get:
+          url: '/call-event/clickhouse'
+          capture:
+            - json: '$.events[0].serviceId'
+              as: 'serviceId'
+
+      - get:
+          url: '/call-event/analytics/by-service'
+          expect:
+            - statusCode: 200
+
+      - get:
+          url: '/call-event/analytics/hourly-distribution'
+          expect:
+            - statusCode: 200
+
+      - think: 1
+
+  - name: 'Call Events Write Flow'
     flow:
       - post:
-          url: "/call-event"
+          url: '/call-event'
           json:
-            callId: "{{ $randomString() }}"
-            serviceId: "{{ $randomString() }}"
-            protocol: "{{ $randomString() }}"
-            media:
-              type: "VOICE"
+            domain: 'devpl3'
+            event: 'tktNewCall'
+            callId: '{{ $randomString() }}'
+            serviceId: '{{ $randomString() }}'
             expectedServiceTime: 0
+            media:
+              type: 'VOICE'
+            interlocutor:
+              identity: '{{ $randomNumber(1000000, 9999999) }}'
             flgConsult: false
             flgIncoming: true
-      
-      - get:
-          url: "/call-event/clickhouse"
-      
-      - get:
-          url: "/call-event/analytics/by-service"
-      
-      - get:
-          url: "/call-event/analytics/hourly-distribution"
+            protocol: '{{ $randomString() }}'
+            eventDate:
+              startDt: '{{ $timestamp }}'
+            contact: '{{ $randomString() }}'
