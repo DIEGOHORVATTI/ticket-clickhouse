@@ -1,10 +1,14 @@
 import { ICallEvent } from '@/modules/callEvent/domain'
-
 import { clickhouseClient, generateClickHouseSchema } from '@/shared/clickhouse'
 
 const MAX_ROW_LIMIT = 1
 
-const generateRandomData: { [key in keyof ICallEvent]: ICallEvent[key] } = {
+type TicketCallEvent = ICallEvent & {
+  flgConsult: number
+  flgIncoming: number
+}
+
+const generateRandomData: { [key in keyof TicketCallEvent]: TicketCallEvent[key] } = {
   domain: 'devpl3',
   event: 'tktNewCall',
   callId: crypto.randomUUID(),
@@ -12,19 +16,19 @@ const generateRandomData: { [key in keyof ICallEvent]: ICallEvent[key] } = {
   iterationLevel: Math.floor(Math.random() * 10) + 1,
   serviceId: crypto.randomUUID(),
   expectedServiceTime: Math.floor(Math.random() * 1000),
-  flgConsult: Math.random() < 0.5,
-  flgIncoming: Math.random() < 0.5,
-  associatedData: '',
+  flgConsult: Math.random() < 0.5 ? 1 : 0, // Convertendo para UInt8
+  flgIncoming: Math.random() < 0.5 ? 1 : 0, // Convertendo para UInt8
+  associatedData: Math.floor(Math.random() * 100000000).toString(),
   protocol: `2025${Math.floor(Math.random() * 100000000)
     .toString()
     .padStart(8, '0')}`,
   contact: crypto.randomUUID(),
-  eventDate: { startDt: new Date().toISOString() },
+  eventDate: { startDt: new Date().toISOString(), duration: Math.floor(Math.random() * 3600) }, // Ajuste para incluir a duração
   callIdHold: crypto.randomUUID(),
   originalCallId: crypto.randomUUID(),
   media: { type: 'voice', submedia: '' },
-  interlocutor: { type: 'customer' },
-  attendant: { type: 'agent' },
+  interlocutor: { type: 'customer', id: crypto.randomUUID() },
+  attendant: { type: 'agent', id: crypto.randomUUID() },
   callbackId: crypto.randomUUID(),
   flgMonitoring: 'N',
   queuePosition: 0,
@@ -55,18 +59,18 @@ const runLoadTest = async () => {
       associatedData: 'String',
       protocol: 'String',
       contact: 'String',
-      eventDate: 'DateTime64(3)',
+      eventDate: 'Map(String, String)',
       callIdHold: 'String',
       originalCallId: 'String',
-      media: 'String',
-      interlocutor: 'String',
-      attendant: 'String',
+      media: 'Map(String, String)',
+      interlocutor: 'Map(String, String)',
+      attendant: 'Map(String, String)',
       callbackId: 'String',
       flgMonitoring: 'String',
-      queuePosition: 'String',
-      fidelization: 'String',
-      flgPickUp: 'String',
-      flgRecord: 'String',
+      queuePosition: 'Int32',
+      fidelization: 'UInt8',
+      flgPickUp: 'UInt8',
+      flgRecord: 'UInt8',
       tokenAi: 'String',
       hookBy: 'String',
       callbackRegState: 'String',

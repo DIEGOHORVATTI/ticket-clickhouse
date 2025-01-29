@@ -12,7 +12,7 @@ export const executeClickhouseQuery = async <T>(query: string): Promise<T[]> => 
   return (await clickhouseClient.query({ query, format: 'JSONEachRow' }).then(res => res.json())) as T[]
 }
 
-const typeMapping = ['String', 'Int32', 'UInt8', 'DateTime64(3)'] as const
+const typeMapping = ['String', 'Int32', 'UInt8', 'DateTime64(3)', 'Map(String, String)'] as const
 /**
  * Gera o schema de uma tabela no ClickHouse
  * @param model Modelo da tabela
