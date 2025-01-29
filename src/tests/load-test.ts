@@ -36,7 +36,7 @@ const generateRandomData: { [key in keyof TicketCallEvent]: TicketCallEvent[key]
   flgPickUp: true,
   flgRecord: true,
   tokenAi: crypto.randomUUID(),
-  hookBy: 'A',
+  hookBy: ['A', 'B', 'C'][Math.floor(Math.random() * 3)],
   callbackRegState: 'OK',
   endReason: 'FINISHED_HANDLED',
   causedBy: 'AGENT'
