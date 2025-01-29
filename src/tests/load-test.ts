@@ -2,23 +2,40 @@ import { ICallEvent } from '@/modules/callEvent/domain'
 
 import { clickhouseClient, generateClickHouseSchema } from '@/shared/clickhouse'
 
-const generateRandomData = (): ICallEvent => {
-  return {
-    domain: 'devpl3',
-    event: 'tktNewCall',
-    callId: crypto.randomUUID(),
-    externalCallId: Math.floor(Math.random() * 100000000).toString(),
-    iterationLevel: Math.floor(Math.random() * 10) + 1,
-    serviceId: crypto.randomUUID(),
-    expectedServiceTime: Math.floor(Math.random() * 1000),
-    flgConsult: Math.random() < 0.5,
-    flgIncoming: Math.random() < 0.5,
-    associatedData: '',
-    protocol: `2025${Math.floor(Math.random() * 100000000)
-      .toString()
-      .padStart(8, '0')}`,
-    contact: crypto.randomUUID()
-  }
+const MAX_ROW_LIMIT = 1
+
+const generateRandomData: { [key in keyof ICallEvent]: ICallEvent[key] } = {
+  domain: 'devpl3',
+  event: 'tktNewCall',
+  callId: crypto.randomUUID(),
+  externalCallId: Math.floor(Math.random() * 100000000).toString(),
+  iterationLevel: Math.floor(Math.random() * 10) + 1,
+  serviceId: crypto.randomUUID(),
+  expectedServiceTime: Math.floor(Math.random() * 1000),
+  flgConsult: Math.random() < 0.5,
+  flgIncoming: Math.random() < 0.5,
+  associatedData: '',
+  protocol: `2025${Math.floor(Math.random() * 100000000)
+    .toString()
+    .padStart(8, '0')}`,
+  contact: crypto.randomUUID(),
+  eventDate: { startDt: new Date().toISOString() },
+  callIdHold: crypto.randomUUID(),
+  originalCallId: crypto.randomUUID(),
+  media: { type: 'voice', submedia: '' },
+  interlocutor: { type: 'customer' },
+  attendant: { type: 'agent' },
+  callbackId: crypto.randomUUID(),
+  flgMonitoring: 'N',
+  queuePosition: 0,
+  fidelization: false,
+  flgPickUp: true,
+  flgRecord: true,
+  tokenAi: crypto.randomUUID(),
+  hookBy: 'A',
+  callbackRegState: 'OK',
+  endReason: 'FINISHED_HANDLED',
+  causedBy: 'AGENT'
 }
 
 const runLoadTest = async () => {
@@ -57,15 +74,15 @@ const runLoadTest = async () => {
       causedBy: 'String'
     })
 
-    const createTableSQL = `CREATE TABLE IF NOT EXISTS call_tickets ${schemaSQL} ENGINE = MergeTree() ORDER BY _id`
+    const createTableSQL = `CREATE TABLE IF NOT EXISTS call_tickets ${schemaSQL} ENGINE = MergeTree() ORDER BY callId`
 
-    console.log(createTableSQL)
+    console.info(createTableSQL)
 
     await clickhouseClient.exec({ query: createTableSQL })
     console.log('✅ Tabela criada com sucesso.\n')
 
     console.log('🟢 Gerando e inserindo dados...\n')
-    const rows = Array.from({ length: 1000 }, () => generateRandomData())
+    const rows = Array.from({ length: MAX_ROW_LIMIT }, () => generateRandomData)
 
     await clickhouseClient.insert({
       table: 'call_tickets',
