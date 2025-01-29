@@ -1,7 +1,7 @@
 import { ICallEvent } from '@/modules/callEvent/domain'
 import { clickhouseClient, generateClickHouseSchema } from '@/shared/clickhouse'
 
-const MAX_ROW_LIMIT = 1
+const MAX_ROW_LIMIT = 100
 
 type TicketCallEvent = ICallEvent & {
   flgConsult: number
