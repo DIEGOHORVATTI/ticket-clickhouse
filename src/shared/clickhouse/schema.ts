@@ -3,7 +3,7 @@ import { clickhouseClient } from '../clickhouse'
 export async function createCallEventsTable() {
   await clickhouseClient.query({
     query: `
-      CREATE TABLE IF NOT EXISTS call_events (
+      CREATE TABLE IF NOT EXISTS call_tickets (
         _id String,
         callId String,
         callIdHold String,

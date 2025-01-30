@@ -1,54 +1,16 @@
-# Auth-TS
+## Clickhouse POC
 
-JWT Authentication Using TypeScript, Express.js, & MongoDB
-
-## Features:
-
-- Authentication
-
-## Technology Stack:
-
-- TypeScript
-- Node.js
-- Express.js
-- MongoDB
-- JWT
-
-## Default urls:
-
-- Login User : POST METHOD <br/>
-  localhost:5000/api/auth
-- Register User : POST METHOD <br/>
-  localhost:5000/api/auth/register
-- Get All Users : GET METHOD <br/>
-  localhost:5000/api/auth/
-
-## Usage
-
-### Env Variables
-
-Create a .env file in then root and add the following
+# Run in docker
 
 ```
-PORT = 5000
-MONGO_URI = your mongodb uri
-JWT_SECRET = 'abc123'
-
-```
-
-## Install Dependencies
-
-```
-yarn
-
-```
-
-## Run App
-
+docker rm $(docker ps -a -q)
+docker-compose down
+docker-compose --env-file .env up --build
 ```
 
 # Run in dev mode
 
-yarn start
+```
+bun dev
 
 ```

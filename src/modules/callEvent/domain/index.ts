@@ -3,6 +3,7 @@ import { Model, Schema } from 'mongoose'
 import { collectionsData } from '@/constants/config'
 
 import { schemaFactory } from '@/shared/schema-factory'
+import { clickhouseClient } from '@/shared/clickhouse'
 
 import { CallEventValidation, callbackRegState, causedBy, endReason } from './validation'
 
@@ -139,10 +140,22 @@ const schema = new Schema<ICallEvent, Model<ICallEvent>>(
   }
 )
 
+schema.pre('save', async function (this) {
+  try {
+    await clickhouseClient.insert({
+      table: 'call_tickets',
+      values: [this],
+      format: 'JSONEachRow'
+    })
+
+    console.log('Evento inserido no ClickHouse:')
+  } catch (error) {
+    console.error('Erro ao inserir no ClickHouse:', error)
+  }
+})
+
 export const CallEvent = schemaFactory<ICallEvent, {}, typeof CallEventValidation>({
   schema,
   name: collectionsData.CallEvent.name,
   validation: CallEventValidation
 })
-
-const lapa: ICallEvent['causedBy'] = 'GENERIC'

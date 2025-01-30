@@ -13,7 +13,6 @@ new Elysia()
   .use(
     cors({
       preflight: true,
-      //origin: Bun.env.URL,
       methods: ['GET', 'POST', 'PUT', 'DELETE'],
       allowedHeaders: ['Content-Type', 'Authorization']
     })
