@@ -82,7 +82,6 @@ const runLoadTest = async () => {
 
     console.info(createTableSQL)
 
-    //await clickhouseClient.exec({ query: createTableSQL })
     console.log('✅ Tabela criada com sucesso.\n')
 
     console.log('🟢 Gerando e inserindo dados...\n')
