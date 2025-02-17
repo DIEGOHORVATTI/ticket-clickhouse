@@ -1,7 +1,7 @@
 import { ICallEvent } from '@/modules/callEvent/domain'
 import { clickhouseClient, generateClickHouseSchema } from '@/shared/clickhouse'
 
-const MAX_ROW_LIMIT = 1
+const MAX_ROW_LIMIT = 100_000_000
 
 type TicketCallEvent = ICallEvent & {
   flgConsult: number
@@ -82,17 +82,19 @@ const runLoadTest = async () => {
 
     console.info(createTableSQL)
 
-    await clickhouseClient.exec({ query: createTableSQL })
+    //await clickhouseClient.exec({ query: createTableSQL })
     console.log('✅ Tabela criada com sucesso.\n')
 
     console.log('🟢 Gerando e inserindo dados...\n')
     const rows = Array.from({ length: MAX_ROW_LIMIT }, () => generateRandomData)
 
-    await clickhouseClient.insert({
+    console.log(rows)
+
+    /* await clickhouseClient.insert({
       table: 'call_tickets',
       values: rows,
       format: 'JSONEachRow'
-    })
+    }) */
 
     console.log('✅ Dados inseridos com sucesso.')
   } catch (error) {

@@ -6,13 +6,13 @@ export const createCallEventService = async (values: ICallEvent) => {
   try {
     const specialty = new CallEvent.model(values)
 
-    await specialty.save()
-
-    await clickhouseClient.insert({
-      table: 'call_tickets',
-      values,
-      format: 'JSONEachRow'
-    })
+    await specialty.save().then(() =>
+      clickhouseClient.insert({
+        table: 'call_tickets',
+        values,
+        format: 'JSONEachRow'
+      })
+    )
 
     return specialty
   } catch (err) {

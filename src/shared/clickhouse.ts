@@ -20,9 +20,7 @@ const typeMapping = ['String', 'Int32', 'UInt8', 'DateTime64(3)', 'Map(String, S
  */
 export function generateClickHouseSchema<T>(model: Record<keyof T, (typeof typeMapping)[number]>): string {
   const fields = Object.entries(model).map(([key, value]) => {
-    const type = typeMapping[value as keyof typeof typeMapping] || 'String'
-
-    return `  ${key} ${type}`
+    return `  ${key} ${value}`
   })
 
   return `(\n${fields.join(',\n')}\n)`
