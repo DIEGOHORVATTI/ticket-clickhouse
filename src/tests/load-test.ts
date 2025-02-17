@@ -87,8 +87,6 @@ const runLoadTest = async () => {
     console.log('🟢 Gerando e inserindo dados...\n')
     const rows = Array.from({ length: MAX_ROW_LIMIT }, () => generateRandomData)
 
-    console.log(rows)
-
     await clickhouseClient.insert({
       table: 'call_tickets',
       values: rows,
