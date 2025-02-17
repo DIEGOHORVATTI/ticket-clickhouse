@@ -90,11 +90,11 @@ const runLoadTest = async () => {
 
     console.log(rows)
 
-    /* await clickhouseClient.insert({
+    await clickhouseClient.insert({
       table: 'call_tickets',
       values: rows,
       format: 'JSONEachRow'
-    }) */
+    })
 
     console.log('✅ Dados inseridos com sucesso.')
   } catch (error) {
